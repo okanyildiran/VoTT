@@ -487,9 +487,19 @@
 
         var querystring = require('querystring');
         // You Key - Value Pairs
-        var postData = querystring.stringify({
-            key: "value"
-        });
+
+        var currentFrame = this.getCurrentFrame();
+
+        var postData = {
+            x1: x1 / this.overlay.width,
+            y1: y1 / this.overlay.height,
+            x2: x2 / this.overlay.width,
+            y2: y2 / this.overlay.height,
+            currentFrame: currentFrame,
+            imageIndex: this.imageIndex,
+            image: this.imagelist[this.imageIndex]
+        };
+        var postDataString = JSON.stringify(postData);
 
         // Your Request Options
         var options = {
@@ -498,18 +508,20 @@
             path: "/",
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(postData)
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postDataString)
             }
         };
 
         var http = require('http')
+        var tagButtons = $(`#${this.optionalTags.id}`).find('.tagButtons');
         // The Request
         var request = http.request(options, function(response) {
             response.on('data', function(chunk) {
                 if (chunk) {
                     var data = chunk.toString('utf8');
                     console.log(data);
+                    tagButtons[data].click();
                     // holds your data
                     this.emitRegionToHost();//Persist
                 }
@@ -526,7 +538,7 @@
             });
         });
 
-        request.write(postData);
+        request.write(postDataString);
         request.end();
 
         //if there is only one tag enable it  by default
