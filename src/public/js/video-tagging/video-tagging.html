@@ -497,7 +497,7 @@
             y2: y2 / this.overlay.height,
             currentFrame: currentFrame,
             imageIndex: this.imageIndex,
-            image: this.imagelist[this.imageIndex]
+            // image: this.imagelist[this.imageIndex]
         };
         var postDataString = JSON.stringify(postData);
 
@@ -514,16 +514,18 @@
         };
 
         var http = require('http')
+        var holyThis = this;
         var tagButtons = $(`#${this.optionalTags.id}`).find('.tagButtons');
         // The Request
         var request = http.request(options, function(response) {
             response.on('data', function(chunk) {
                 if (chunk) {
                     var data = chunk.toString('utf8');
-                    console.log(data);
-                    tagButtons[data].click();
+                    var arr = data.split('\'');
+                    console.log(arr[1]);
+                    $("#" + arr[1]).click();
                     // holds your data
-                    this.emitRegionToHost();//Persist
+                    // holyThis.emitRegionToHost();//Persist
                 }
             });
         }).on("error", function(e) {
