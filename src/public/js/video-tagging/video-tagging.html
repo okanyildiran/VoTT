@@ -76,7 +76,10 @@
               <td class ="videoControlCell simpleControl clickableControl" style="display: none">
                 <span id="mute" title="Mute" class="icon-volume-medium taggingControls" on-click='muteClicked'></span>
               </td>
-              <td class="volumeControlCell longControl" style="display: none">
+              <td class="volumeControlCell longControl">
+                  <img id="prediction" class="textElements" src="../ROIs/b14-a.png" width="25" height="25"/>
+              </td>
+			  <td class="volumeControlCell longControl" style="display: none">
                   <input id="volumeSlider" class="volume clickableControl" type="range" min=0 max = 1 value=.5 step= .1 required />
               </td>
 
@@ -497,6 +500,7 @@
             y2: y2 / this.overlay.height,
             currentFrame: currentFrame,
             imageIndex: this.imageIndex,
+            path: this.video.currentSrc,
             // image: this.imagelist[this.imageIndex]
         };
         var postDataString = JSON.stringify(postData);
@@ -513,6 +517,8 @@
             }
         };
 
+        $("#prediction").attr("src","");
+
         var http = require('http')
         var holyThis = this;
         var tagButtons = $(`#${this.optionalTags.id}`).find('.tagButtons');
@@ -524,6 +530,7 @@
                     var arr = data.split('\'');
                     console.log(arr[1]);
                     $("#" + arr[1]).click();
+                    $("#prediction").attr("src","../ROIs/" + arr[1] + ".png");
                     // holds your data
                     // holyThis.emitRegionToHost();//Persist
                 }
